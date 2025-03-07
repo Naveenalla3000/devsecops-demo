@@ -118,9 +118,12 @@ jobs:
         with:
           context: .
           push: false
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           load: true
+
+      - name: Debug Docker Images
+        run: docker images
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
