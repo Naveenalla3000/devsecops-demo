@@ -116,10 +116,10 @@ jobs:
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          load: true  # Required for local Trivy scan
+          load: true
 
       - name: Debug Docker Images
-        run: docker images  # Check if the image is available locally
+        run: docker images
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
