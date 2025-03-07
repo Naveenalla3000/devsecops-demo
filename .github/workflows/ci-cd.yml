@@ -121,17 +121,22 @@ jobs:
       - name: Debug Docker Images
         run: docker images
 
+      - name: Convert Image Name to Lowercase
+        run: echo "IMAGE_NAME_LOWER=$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Debug Lowercase Image Name
+        run: echo "Using image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:sha-${{ github.sha }}"
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
-        env:
-          IMAGE_NAME_LOWER: ${{ env.REGISTRY }}/$(echo ${{ env.IMAGE_NAME }} | tr '[:upper:]' '[:lower:]')
         with:
-          image-ref: ${{ env.IMAGE_NAME_LOWER }}:sha-${{ github.sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:sha-${{ github.sha }}
           format: 'table'
           exit-code: 1
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+
 
       - name: Push Docker image
         if: success()  # Only push if Trivy scan passes
