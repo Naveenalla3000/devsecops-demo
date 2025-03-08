@@ -17,7 +17,6 @@ FROM nginx:1.25-alpine
 #use the latest stable Alpine-based Nginx image
 
 # Upgrade libxml2 to fix vulnerabilities
-RUN apk update && apk add --no-cache libxml2=2.13.4-r4
 
 # Copy built files from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
